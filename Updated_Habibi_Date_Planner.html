@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habibi's Date Planner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            margin: 20px;
+        }
+        .question {
+            font-size: 1.5em;
+            margin: 20px 0;
+        }
+        .choices {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .choice {
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .choice img {
+            max-width: 150px;
+            border-radius: 10px;
+        }
+        .choice:hover {
+            transform: scale(1.1);
+            border-color: #ff6b6b;
+        }
+        footer {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            padding: 10px;
+            font-size: 0.9em;
+        }
+        .calendar {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .calendar button {
+            font-size: 1em;
+            padding: 10px 20px;
+            margin: 0 10px;
+            cursor: pointer;
+            border: 2px solid #ff6b6b;
+            background-color: white;
+            color: #ff6b6b;
+            border-radius: 5px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .calendar button:hover {
+            background-color: #ff6b6b;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Habibi's Date Planner</h1>
+    </header>
+    <div class="container" id="content">
+        <!-- Content will be dynamically updated -->
+    </div>
+    <footer>
+        <p>Made with ❤️ for my Habibi</p>
+    </footer>
+
+    <script>
+        const steps = [
+            {
+                question: `<img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2l5bHZza212c2hsZHZwb2dhcDdtN2NhdnFzdnFsZWVtaHZ0OHc3ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Iu4Y1zC8ixFeu0GA0A/giphy.gif" alt="Will you be my Valentine?">`,
+                choices: [
+                    { text: "Yes!", gif: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXJxbjZqY2Jxc3lkMGgyZ3NzcDh1cTh2MGpkOThuNmVleWYyNDNuOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3ohzdIuqJoo8QdKlnW/giphy.gif" },
+                    { text: "Absolutely Yes!", gif: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXJxbjZqY2Jxc3lkMGgyZ3NzcDh1cTh2MGpkOThuNmVleWYyNDNuOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3ohzdIuqJoo8QdKlnW/giphy.gif" }
+                ]
+            },
+            {
+                question: "When can I take you out, Habibi?",
+                isCalendar: true,
+                dates: [
+                    { text: "Friday 2/14/2025" },
+                    { text: "Saturday 2/15/2025" },
+                    { text: "Sunday 2/16/2025" }
+                ]
+            },
+            {
+                question: "What would you like to do on our date?",
+                choices: [
+                    { text: "Movies", gif: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdGpya3IyNjhjMGpva2ZnNDlkM2F4MjhweWxhaW53YjQzcTBsbjdobiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Izcsdt83EqId7ONhZD/giphy.gif" },
+                    { text: "Bowling", gif: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZGV6OW8xOWZ2dWkzd3Q1MDhhZ3FicTlyZDgzdWs3ZHpnNjR5eDQ4cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26gs6yAnyuM99qAEw/giphy.gif" },
+                    { text: "Thrifting", gif: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDI4ODdiYzZhNmJkcjZnMHZjNmZhMzVjNHBkbXI2eDcycDBobXI3MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4ZHLE7ObYJ9FGSxIHm/giphy.gif" },
+                    { text: "Build Legos", gif: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2VxYXg4bmw0bW93eGpwZ2ZrZHQzMnF4b293OGNrYTd2Yjhjc2R4YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qunFC4tNsyA8y9M36d/giphy.gif" },
+                    { text: "Painting Date", gif: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDdrcDE1ZW1scHNiaHE4YTE1cTFrYzNpbXA0ZnF3M2NzdXRrbGx1ciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/ZgJM9rKPy4Lq5DfCOI/giphy.gif" }
+                ]
+            },
+            {
+                question: "What’s your craving, Love?",
+                choices: [
+                    { text: "Pizza", gif: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcHlzYXU0bnpwcnVqbHpraXQzN2I3M2Rqb2hvMGNiMnlnZDR4aGllZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/jn2iXu2HRpMuovBrrV/giphy.gif" },
+                    { text: "Mexican", gif: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG51bjYzYmJhMTVldGtjZ25uYXluejc0cjI2ZnczczRjeDdsYnhraCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Md1SoK1fr8ll0mxi0N/giphy.gif" },
+                    { text: "Italian", gif: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExc25mZG5iMm03NzBzb3Bqa2ZjdnVrMHpuam1kdWZjNjNuYjBjZ3FjMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BQQBv278nzVx3CIhkD/giphy.gif" },
+                    { text: "Steakhouse", gif: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExNXA3ejA0bWJram5oM2xxNHVxaWdwanVlZjVudXhtcWE5c3RubXlqeSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/PeV1e8iCwPIrTGJcNA/giphy.gif" }
+                ]
+            }
+        ];
+
+        let currentStep = 0;
+
+        function renderStep() {
+            const step = steps[currentStep];
+            const contentDiv = document.getElementById("content");
+
+            if (step.isCalendar) {
+                contentDiv.innerHTML = `
+                    <div class="question">${step.question}</div>
+                    <div class="calendar">
+                        ${step.dates
+                            .map(
+                                (date) => `
+                                <button onclick="nextStep()">${date.text}</button>
+                            `
+                            )
+                            .join("")}
+                    </div>
+                `;
+            } else if (currentStep === 0) {
+                contentDiv.innerHTML = `
+                    <div class="question">${step.question}</div>
+                    <div class="choices">
+                        ${step.choices
+                            .map(
+                                (choice, index) => `
+                                <div class="choice" onclick="showGif(${index})">
+                                    <p>${choice.text}</p>
+                                </div>
+                            `
+                            )
+                            .join("")}
+                    </div>
+                `;
+            } else {
+                contentDiv.innerHTML = `
+                    <div class="question">${step.question}</div>
+                    <div class="choices">
+                        ${step.choices
+                            .map(
+                                (choice, index) => `
+                                <div class="choice" onclick="nextStep(${index})">
+                                    <img src="${choice.gif}" alt="${choice.text}">
+                                    <p>${choice.text}</p>
+                                </div>
+                            `
+                            )
+                            .join("")}
+                    </div>
+                `;
+            }
+        }
+
+        function showGif(choiceIndex) {
+            const step = steps[currentStep];
+            const contentDiv = document.getElementById("content");
+            contentDiv.innerHTML = `
+                <div class="question">
+                    <img src="${step.choices[choiceIndex].gif}" alt="Reaction GIF">
+                </div>
+                <button onclick="nextStep()">Next</button>
+            `;
+        }
+
+        function nextStep() {
+            currentStep++;
+            if (currentStep < steps.length) {
+                renderStep();
+            } else {
+                document.getElementById("content").innerHTML = `
+                    <div class="question">Thanks for planning our date! I can’t wait to take you out and make it the best day ever! 💕</div>
+                `;
+            }
+        }
+
+        renderStep();
+    </script>
+</body>
+</html>
